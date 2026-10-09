@@ -1,0 +1,18 @@
+#!/usr/bin/make -f
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+export DEB_LDFLAGS_MAINT_APPEND = -Wl,-O1 -Wl,-z,defs
+
+ifeq (yes,$(shell dpkg-vendor --derives-from Ubuntu && echo yes))
+	BUGTRACKER = https://bugs.launchpad.net/ubuntu/+source/gnome-text-editor/+filebug?no-redirect
+else
+	BUGTRACKER = https://www.debian.org/Bugs/Reporting
+endif
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- -Dbugreport_url=$(BUGTRACKER)
+
+override_dh_gnome_clean:

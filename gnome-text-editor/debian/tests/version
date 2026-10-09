@@ -1,0 +1,12 @@
+#!/bin/bash
+verstring="$(LC_ALL=C gnome-text-editor --version)"
+instvers="$(dpkg-query -f '${Version}' --show gnome-text-editor | cut -f1 -d- | tr '~' '.')"
+expected="Text Editor $instvers"
+case "$verstring" in *"$expected"*)
+    exit 0
+    ;;
+  *)
+    printf >&2  "Expected: %s\n     Got: %s\n" "$expected" "$verstring"
+    exit 1
+    ;;
+esac

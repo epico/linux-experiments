@@ -1,0 +1,10 @@
+gnome-text-editor (48.3-4) unstable; urgency=medium
+
+  * Team upload
+  * d/control: Remove unused B-D on libgirepository1.0-dev
+  * d/copyright: Don't quote the FSF's former postal address here
+  * d/control: Remove Rules-Requires-Root, unnecessary since trixie
+  * d/control: Standards-Version: 4.7.2 (no changes required)
+  * d/salsa-ci.yml: Add
+
+ -- Simon McVittie <smcv@debian.org>  Sun, 07 Sep 2025 22:00:59 +0100
