@@ -1,0 +1,52 @@
+name: text-editor
+base: core24
+version: '46.3'
+summary: Simple text editor for GNOME
+description: |
+  A simple, distraction-free text editor for the GNOME desktop,
+  built with GTK4 and libadwaita.
+
+grade: stable
+confinement: strict
+adopt-info: text-editor
+icon: usr/share/icons/hicolor/scalable/apps/org.gnome.TextEditor.svg
+
+apps:
+  text-editor:
+    command: usr/bin/gnome-text-editor
+    desktop: usr/share/applications/org.gnome.TextEditor.desktop
+    extensions: [gnome]
+    slots: [dbus-text-editor]
+
+slots:
+  dbus-text-editor:
+    interface: dbus
+    bus: session
+    name: org.gnome.TextEditor
+
+parts:
+  text-editor:
+    source: https://gitlab.gnome.org/GNOME/gnome-text-editor.git
+    source-tag: '46.3'
+    plugin: meson
+    meson-parameters:
+      - --prefix=/usr
+    parse-info: [usr/share/metainfo/org.gnome.TextEditor.metainfo.xml]
+    build-packages:
+      - gettext
+      - libadwaita-1-dev
+      - libgtk-4-dev
+      - libgtksourceview-5-dev
+      - libeditorconfig-dev
+      - libcairo2-dev
+      - libenchant-2-dev
+      - libicu-dev
+      - gi-docgen
+      - desktop-file-utils
+    stage-packages:
+      - libeditorconfig0
+      - libenchant-2-2
+      - enchant-2
+      - libicu74
+      - hunspell-en-us
+      - iso-codes
