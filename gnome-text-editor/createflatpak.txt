@@ -1,0 +1,12 @@
+1. Setup flatpak
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+flatpak install flathub org.gnome.Sdk org.gnome.Platform
+
+2. Use org.gnome.TextEditor.json
+
+3. Build flatpak
+flatpak-builder --force-clean --user --install-deps-from=flathub --repo=repo builddir org.gnome.TextEditor.json
+
+flatpak-builder --run builddir org.gnome.TextEditor.json gnome-text-editor
+
+flatpak build-bundle repo gnome-text-editor.flatpak org.gnome.TextEditor
