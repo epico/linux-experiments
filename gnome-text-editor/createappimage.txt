@@ -1,0 +1,45 @@
+1. Install Build Dependencies
+sudo dnf install -y meson ninja-build gcc gcc-c++ pkg-config git wget fuse fuse-libs
+
+sudo dnf install -y gtk4-devel libadwaita-devel gtksourceview5-devel libspelling-devel enchant2-devel editorconfig-devel appstream-util desktop-file-utils itstool libxml2
+
+2. Download Packaging Tools 
+mkdir -p ~/appimage-build && cd ~/appimage-build
+wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+wget https://raw.githubusercontent.com/linuxdeploy/linuxdeploy-plugin-gtk/master/linuxdeploy-plugin-gtk.sh
+wget https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
+chmod +x linuxdeploy-x86_64.AppImage appimagetool-x86_64.AppImage linuxdeploy-plugin-gtk.sh
+
+3. Get and Compile gnome-text-editor
+wget https://download.gnome.org/sources/gnome-text-editor/50/gnome-text-editor-50.0.tar.xz
+tar xf gnome-text-editor-50.0.tar.xz
+cd gnome-text-editor-50.0
+ 
+meson setup build --prefix=/usr
+ninja -C build
+DESTDIR=$PWD/AppDir ninja -C build install
+
+4. Stage the Application
+
+Copy desktop file and icon to the AppDir root
+cp AppDir/usr/share/applications/org.gnome.TextEditor.desktop AppDir/
+cp AppDir/usr/share/icons/hicolor/scalable/apps/org.gnome.TextEditor.svg AppDir/
+
+5. Bundle GTK Dependencies
+
+# Tell linuxdeploy where to find the plugin
+export PATH=$PWD/..:$PATH
+
+# Run linuxdeploy (it will invoke the GTK plugin)
+../linuxdeploy-x86_64.AppImage --appdir AppDir --executable AppDir/usr/bin/gnome-text-editor --desktop-file AppDir/org.gnome.TextEditor.desktop --icon-file AppDir/org.gnome.TextEditor.svg
+ 
+export DEPLOY_GTK_VERSION=4
+../linuxdeploy-x86_64.AppImage --appdir AppDir
+
+6. Generate the AppImage
+
+Finally, use appimagetool to pack the AppDir into a single executable file.
+
+ARCH=x86_64 ./appimagetool-x86_64.AppImage AppDir Gnome-Text-Editor-x86_64.AppImage
+ 
+
